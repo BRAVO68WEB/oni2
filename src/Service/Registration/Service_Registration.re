@@ -11,7 +11,7 @@ module Effect = {
       ~name="registration.checkLicenseKeyValidity", dispatch => {
       let licenseKey = licenseKey |> String.trim;
       let url =
-        "https://v2.onivim.io/api/isLicenseKeyValid?licenseKey=" ++ licenseKey;
+        "https://oni2.brag.pro/api/isLicenseKeyValid?licenseKey=" ++ licenseKey;
       let setup = Setup.init();
       let response =
         Service_Net.Request.json(
