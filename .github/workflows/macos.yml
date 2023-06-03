@@ -1,11 +1,11 @@
-name: CI-windows
+name: CI-macos
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-11
 
     steps:         
       - uses: actions/checkout@v2
@@ -14,8 +14,8 @@ jobs:
                                         
       - name: Esy setup
         run: |
+          brew install libtool gettext
           npm install -g esy@latest
-          npm install -g windows-build-tools@4.0.0
           npm install -g node-gyp
           node-gyp install 14.15.4
           node install-node-deps.js
@@ -23,16 +23,20 @@ jobs:
           esy bootstrap
           esy build --verbosity=debug
           esy run -f --checkhealth
+          echo "first checkhealth"
           esy '@release' install
           esy '@release' run -f --checkhealth
+          echo "second checkhealth"
           esy '@release' run --help
+          echo "third run"
           esy '@release' create
-          dir
-          ./scripts/windows/publish.ps1
+          ls -al
+          ./_release/Onivim2.app/Contents/MacOS/Oni2 -f --checkhealth
+          echo "last checkhealth"
+          ./scripts/osx/package.sh
           tar -cvf AppDir.tar _publish
           
       - uses: actions/upload-artifact@v3
         with: 
-          name: AppDirWindows
+          name: AppDirMac
           path: AppDir.tar
-                   
